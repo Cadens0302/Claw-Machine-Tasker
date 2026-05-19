@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Claw Machine Tasker</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;600;700&family=Fredoka:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="hero">
+        <p class="eyebrow">Daily tasks, arcade-style</p>
+        <h1>Claw Machine Tasker</h1>
+        <p class="hero-copy">
+          Turn your to-do list into a tiny prize booth. Add tasks, then play the
+          claw machine to discover what you tackle next.
+        </p>
+      </header>
+
+      <main>
+        <section class="panel active" data-screen="home" aria-labelledby="home-title">
+          <div class="panel-card">
+            <h2 id="home-title">What would you like to do?</h2>
+            <p>Choose your next move and let the machine handle the fun part.</p>
+            <div class="button-row">
+              <button type="button" class="arcade-button" data-action="go-play">
+                Play Claw Machine
+              </button>
+              <button
+                type="button"
+                class="arcade-button secondary"
+                data-action="go-create"
+              >
+                Create a New Task
+              </button>
+            </div>
+          </div>
+        </section>
+
+        <section class="panel" data-screen="create" aria-labelledby="create-title">
+          <div class="panel-card form-card">
+            <div class="panel-heading">
+              <h2 id="create-title">Create a Task</h2>
+              <button type="button" class="text-button" data-action="go-home">
+                Back
+              </button>
+            </div>
+            <form id="task-form" class="task-form">
+              <label for="task-name">Task name</label>
+              <input
+                id="task-name"
+                name="taskName"
+                type="text"
+                maxlength="80"
+                placeholder="Finish homework, water plants, stretch..."
+                required
+              />
+              <div class="button-row">
+                <button type="submit" class="arcade-button">Save Task</button>
+                <button
+                  type="button"
+                  class="arcade-button secondary"
+                  data-action="go-play"
+                >
+                  Go to Machine
+                </button>
+              </div>
+            </form>
+            <p id="form-message" class="status-message" aria-live="polite"></p>
+
+            <div class="task-list-wrap">
+              <div class="panel-heading">
+                <h3>Saved Tasks</h3>
+                <div class="list-actions">
+                  <button type="button" class="text-button" data-action="toggle-delete-mode">
+                    Select Tasks to Delete
+                  </button>
+                  <button type="button" class="text-button" data-action="clear-completed">
+                    Clear Completed
+                  </button>
+                </div>
+              </div>
+              <div id="delete-toolbar" class="delete-toolbar hidden">
+                <p>Select any tasks you want to remove, then confirm.</p>
+                <div class="button-row compact">
+                  <button type="button" class="arcade-button danger" data-action="confirm-delete">
+                    Delete Selected
+                  </button>
+                  <button type="button" class="arcade-button secondary" data-action="cancel-delete">
+                    Cancel
+                  </button>
+                </div>
+              </div>
+              <ul id="task-list" class="task-list"></ul>
+            </div>
+          </div>
+        </section>
+
+        <section class="panel" data-screen="play" aria-labelledby="play-title">
+          <div class="panel-card machine-panel">
+            <div class="panel-heading">
+              <div>
+                <h2 id="play-title">Claw Machine</h2>
+                <p class="machine-subtitle">Move with W A S D, then press Space to grab.</p>
+              </div>
+              <button type="button" class="text-button" data-action="go-home">
+                Back
+              </button>
+            </div>
+
+            <div id="empty-state" class="empty-state hidden">
+              <p>No task balls are waiting in the machine.</p>
+              <button type="button" class="arcade-button" data-action="go-create">
+                Create a Task
+              </button>
+            </div>
+
+            <div id="machine-wrap" class="machine-wrap">
+              <div class="machine-stage">
+                <div class="machine-top">
+                  <div id="claw-cable" class="claw-cable"></div>
+                  <div id="claw" class="claw">
+                    <span class="claw-arm left"></span>
+                    <span class="claw-core"></span>
+                    <span class="claw-arm right"></span>
+                  </div>
+                </div>
+                <div id="machine-floor" class="machine-floor"></div>
+              </div>
+
+              <aside class="side-panel">
+                <div class="side-badge">
+                  <span>Available Balls</span>
+                  <strong id="task-count">0</strong>
+                </div>
+                <div class="controls-card">
+                  <h3>Controls</h3>
+                  <p>`W` up</p>
+                  <p>`A` left</p>
+                  <p>`S` down</p>
+                  <p>`D` right</p>
+                  <p>`Space` grab</p>
+                </div>
+                <div class="prize-card">
+                  <h3>Prize Slot</h3>
+                  <p id="prize-text">Grab a ball to reveal a task.</p>
+                </div>
+              </aside>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <div id="prize-modal" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="prize-modal-title">
+      <div class="modal-card">
+        <p class="eyebrow">Prize unlocked</p>
+        <h2 id="prize-modal-title">You just got:</h2>
+        <p id="prize-modal-task" class="modal-task-name"></p>
+        <p class="modal-copy">Nice pull. This is the task waiting for you today.</p>
+        <button type="button" class="arcade-button" data-action="close-prize-modal">
+          Back to Machine
+        </button>
+      </div>
+    </div>
+
+    <script src="./app.js"></script>
+  </body>
+</html>
