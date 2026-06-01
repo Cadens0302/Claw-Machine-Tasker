@@ -202,16 +202,11 @@ function renderMachine() {
     ball.style.background = task.color;
     ball.style.left = `${task.position.x}%`;
     ball.style.top = `${task.position.y}%`;
-    ball.textContent = shortLabel(task.name);
     ball.setAttribute("aria-label", `Task ball for ${task.name}`);
     machineFloor.append(ball);
   });
 
   updateClawPosition();
-}
-
-function shortLabel(name) {
-  return name.length > 18 ? `${name.slice(0, 16)}...` : name;
 }
 
 function updateClawPosition() {
